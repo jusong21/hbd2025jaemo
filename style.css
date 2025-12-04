@@ -85,10 +85,10 @@ body {
     padding: 40px 20px;
 }
 
-/* Desktop Notice - Default Visible (Mobile First) */
+/* Desktop Notice - Default Hidden (Visible only on Mobile) */
 .desktop-notice {
-    display: block; /* Always show by default */
-    background-color: #fff3cd; /* Changed to yellow for better visibility */
+    display: none; /* Default hidden */
+    background-color: #fff3cd;
     border: 1px solid #ffecb5;
     color: #664d03;
     padding: 15px;
@@ -105,10 +105,10 @@ body {
     margin-bottom: 5px;
 }
 
-/* Hide on Desktop (Large Screens) */
-@media (min-width: 992px) {
+/* Show on Mobile/Tablet (Screens narrower than 992px) */
+@media (max-width: 991px) {
     .desktop-notice {
-        display: none !important;
+        display: block !important;
     }
 }
 
