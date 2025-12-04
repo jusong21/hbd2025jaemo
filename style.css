@@ -85,6 +85,28 @@ body {
     padding: 40px 20px;
 }
 
+/* Desktop Notice */
+.desktop-notice {
+    background-color: #e8f4fd;
+    border: 1px solid #b6d4fe;
+    color: #0d3c61;
+    padding: 12px 20px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    font-size: 13px;
+    text-align: center;
+}
+
+.desktop-notice strong {
+    font-weight: 600;
+}
+
+@media (min-width: 769px) {
+    .desktop-notice {
+        display: none; /* Hide on desktop screens */
+    }
+}
+
 .nature-article-preview {
     background: white;
     padding: 30px;
