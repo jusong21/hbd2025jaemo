@@ -85,9 +85,9 @@ body {
     padding: 40px 20px;
 }
 
-/* Desktop Notice - Default Hidden (Visible only on Mobile) */
+/* Desktop Notice */
 .desktop-notice {
-    display: none; /* Default hidden */
+    display: block; /* Always visible by default */
     background-color: #fff3cd;
     border: 1px solid #ffecb5;
     color: #664d03;
@@ -105,10 +105,10 @@ body {
     margin-bottom: 5px;
 }
 
-/* Show on Mobile/Tablet (Screens narrower than 992px) */
-@media (max-width: 991px) {
+/* Hide on Desktop (Screens wider than 992px) */
+@media (min-width: 992px) {
     .desktop-notice {
-        display: block !important;
+        display: none !important;
     }
 }
 
