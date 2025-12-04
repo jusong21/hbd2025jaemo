@@ -105,12 +105,12 @@ body {
     margin-bottom: 5px;
 }
 
-/* Hide on Desktop (Screens wider than 992px) */
-@media (min-width: 992px) {
+/* Hide on Desktop removed for debugging */
+/* @media (min-width: 992px) {
     .desktop-notice {
         display: none !important;
     }
-}
+} */
 
 .nature-article-preview {
     background: white;
