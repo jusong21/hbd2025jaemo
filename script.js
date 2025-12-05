@@ -2,9 +2,6 @@
 
 // ==========================================
 // [IMPORTANT] JSONBIN.IO CONFIGURATION
-// 1. Go to https://jsonbin.io/ and create a new bin with content: {"messages": []}
-// 2. Copy the Bin ID (e.g., 65123...)
-// 3. Go to API Keys and copy your Master Key (or create an Access Key)
 // ==========================================
 const JSONBIN_API_KEY = "$2a$10$yVxH1SNHi4i61w8vkEdWoesD6lc4ghgmE8dlVKdardUN0j0fZ/NT6";
 const JSONBIN_BIN_ID = "6931f1bfae596e708f83f81c";
@@ -50,19 +47,15 @@ document.addEventListener('DOMContentLoaded', () => {
     setupForm();
     setupModal();
     setupCharts(); // Charts might be empty initially
-    checkUrlForMessage();
-
-    // Load messages from JSONBin
-    loadMessages();
+    
+    // Only load messages if we are on a page that displays them (e.g., paper.html or index.html preview)
+    if (document.getElementById('referencesList') || document.getElementById('contributionCount')) {
+        loadMessages();
+    }
 });
 
 // Load messages from JSONBin
 async function loadMessages() {
-    if (JSONBIN_API_KEY === "REPLACE_WITH_YOUR_MASTER_KEY") {
-        console.warn("JSONBin API Key not set. Messages will not load.");
-        return;
-    }
-
     try {
         const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
             headers: {
@@ -79,7 +72,7 @@ async function loadMessages() {
                 messages.sort((a, b) => a.id - b.id);
                 updateReferences();
                 updateStatistics();
-                setupCharts();
+                // setupCharts(); // Re-render charts if needed (removed for now to prevent errors if canvas missing)
             }
         } else {
             console.error("Failed to load messages:", response.statusText);
@@ -91,11 +84,6 @@ async function loadMessages() {
 
 // Save messages to JSONBin
 async function saveMessagesToBin() {
-    if (JSONBIN_API_KEY === "REPLACE_WITH_YOUR_MASTER_KEY") {
-        alert("JSONBin API Key not configured. Message cannot be saved.");
-        return false;
-    }
-
     try {
         const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
             method: 'PUT',
@@ -135,9 +123,45 @@ function renderReferences() {
     if (!refList) return;
     
     // Keep predefined references (first 3 items)
-    const staticRefs = Array.from(refList.querySelectorAll('.reference-item')).slice(0, 3);
+    // This assumes the static HTML has 3 reference items.
+    // If this script runs multiple times or after adding, we need to be careful.
+    // Better approach: Always rebuild from scratch, but include static ones manually or keep them separate.
+    
+    // Simple approach: Clear and rebuild using static array if not already done
+    // For now, let's just grab what's there if it's the first load
+    
+    // Actually, to be safe across reloads:
+    // 1. Hardcode the static references here or 
+    // 2. Assume they are in HTML and we only append new ones? 
+    //    Problem: If we reload messages, we duplicate.
+    
+    // Best approach for this simple app:
+    // Clear list, add hardcoded static refs, then add dynamic refs.
+    
     refList.innerHTML = '';
-    staticRefs.forEach(ref => refList.appendChild(ref));
+    
+    // Static References
+    const staticRefsData = [
+        {
+            num: 1,
+            content: `Sprinkleton, I., Whiskerfield, G., & Crumblecroft, M. (2023). <em>Quantum Confectionery Dynamics: Phonons in Layered Pastries</em>. Journal of Edible Physics, <strong>42</strong>(3), 123-138.`
+        },
+        {
+            num: 2,
+            content: `Ganache, L., & Fondant, M. (2022). <em>Decoherence Effects of Frosting Roughness on Wish Transmission</em>. Sweet Science Letters, <strong>17</strong>(7), 456-462.`
+        },
+        {
+            num: 3,
+            content: `Crumblecroft, M. (2021). <em>Phonon-Mediated Celebratory Communications: A Treatise</em>. Institute of Culinary Quantum Mechanics Press.`
+        }
+    ];
+    
+    staticRefsData.forEach(ref => {
+        const div = document.createElement('div');
+        div.className = 'reference-item';
+        div.innerHTML = `<span class="ref-number">[${ref.num}]</span><span class="ref-content">${ref.content}</span>`;
+        refList.appendChild(div);
+    });
     
     // Add dynamic message references
     messages.forEach((message) => {
@@ -189,6 +213,9 @@ async function addMessage() {
         return;
     }
     
+    // Show loading state or something?
+    // For now just alert "Submitting..." if you want, or just wait.
+    
     // Reload latest messages first to avoid overwriting others' updates
     await loadMessages();
 
@@ -210,7 +237,6 @@ async function addMessage() {
         // Update UI only if save was successful
         updateReferences();
         updateStatistics();
-        setupCharts();
         
         // Reset forms
         if (nameEl) nameEl.value = '';
@@ -284,18 +310,6 @@ function closeMessageViewModal() {
     if (modal) modal.style.display = 'none';
 }
 
-function showPaper() {
-    document.getElementById('mainPage').style.display = 'none';
-    document.getElementById('paperPage').style.display = 'block';
-    window.scrollTo(0, 0);
-}
-
-function showMainPage() {
-    document.getElementById('paperPage').style.display = 'none';
-    document.getElementById('mainPage').style.display = 'block';
-    window.scrollTo(0, 0);
-}
-
 function sharePage() {
     const currentUrl = window.location.origin + window.location.pathname;
     if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -305,18 +319,6 @@ function sharePage() {
     } else {
         fallbackCopy(currentUrl);
     }
-}
-
-function showGitHubPage() {
-    document.getElementById('paperPage').style.display = 'none';
-    document.getElementById('githubPage').style.display = 'block';
-    window.scrollTo(0, 0);
-}
-
-function closeGitHubPage() {
-    document.getElementById('githubPage').style.display = 'none';
-    document.getElementById('paperPage').style.display = 'block';
-    window.scrollTo(0, 0);
 }
 
 function fallbackCopy(text) {

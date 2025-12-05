@@ -85,9 +85,9 @@ body {
     padding: 40px 20px;
 }
 
-/* Desktop Notice */
+/* Desktop Notice: Always visible by default (for Mobile) */
 .desktop-notice {
-    display: block; /* Always visible by default */
+    display: block; 
     background-color: #fff3cd;
     border: 1px solid #ffecb5;
     color: #664d03;
@@ -105,12 +105,12 @@ body {
     margin-bottom: 5px;
 }
 
-/* Hide on Desktop removed for debugging */
-/* @media (min-width: 992px) {
+/* Hide Notice on Desktop (Screens wider than 992px) */
+@media (min-width: 992px) {
     .desktop-notice {
         display: none !important;
     }
-} */
+}
 
 .nature-article-preview {
     background: white;
